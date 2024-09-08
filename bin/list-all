@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# shellcheck source=lib/utils.bash
+. "$(dirname "$0")/../lib/utils.bash"
+
+list_github_semver_tags "https://github.com/cargo-bins/cargo-quickinstall" "$TOOL_NAME" \
+	| sort_semver \
+	| xargs echo

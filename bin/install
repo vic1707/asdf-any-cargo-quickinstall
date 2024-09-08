@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# shellcheck source=lib/utils.bash
+. "$(dirname "$0")/../lib/utils.bash"
+
+if [ "$ASDF_INSTALL_TYPE" != "version" ]; then
+	fail "This plugin only supports release installs."
+fi
+
+TOOL_NAME_WITH_VERSION="$TOOL_NAME-$ASDF_INSTALL_VERSION"
+TOOL_INSTALL_PATH="$ASDF_INSTALL_PATH/bin"
+mkdir -p "$TOOL_INSTALL_PATH"
+DL_PATH="$TOOL_INSTALL_PATH/tmp.tar.gz"
+
+# compatible target triples
+IFS=" " read -r -a TARGET_TRIPLEs <<< "$(get_target_triples)"
+
+say "Installing $TOOL_NAME@$ASDF_INSTALL_VERSION"
+say "Your system is compatible with these architectures: ${TARGET_TRIPLEs[*]}"
+
+DL_LINK=""
+for triple in "${TARGET_TRIPLEs[@]}"; do
+	triple_url="https://github.com/cargo-bins/cargo-quickinstall/releases/download/$TOOL_NAME_WITH_VERSION/$TOOL_NAME_WITH_VERSION-$triple.tar.gz"
+	if ! is_valid "$triple_url"; then
+		say "$triple_url doesn't exist on cargo-quickinstall releases."
+		continue
+	fi
+	DL_LINK=$triple_url
+done
+
+[ -z "$DL_LINK" ] && fail "Couldn't find a compatible version on 'https://github.com/cargo-bins/cargo-quickinstall/releases/$TOOL_NAME_WITH_VERSION'."
+
+say "Downloading $DL_LINK to $DL_PATH"
+download "$DL_PATH" "$DL_LINK" || {
+	rm -rf "$ASDF_INSTALL_PATH"
+	fail "An error ocurred while downloading $DL_LINK."
+}
+
+say "Extracting $DL_PATH"
+tar -xf "$DL_PATH" -C "$TOOL_INSTALL_PATH" || {
+	rm -rf "$ASDF_INSTALL_PATH"
+	fail "An error ocurred while extracting $DL_LINK."
+}
+rm "$DL_PATH"
+
+say "$TOOL_NAME@$ASDF_INSTALL_VERSION installation was successful!"

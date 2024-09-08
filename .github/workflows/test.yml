@@ -1,0 +1,42 @@
+name: Test
+
+on:
+    pull_request:
+        paths:
+            - bin/**
+            - lib/**
+            - .github/workflows/test.yml
+    push:
+        paths:
+            - bin/**
+            - lib/**
+            - .github/workflows/test.yml
+    workflow_dispatch:
+
+jobs:
+    plugin_test:
+        name: asdf plugin test
+        strategy:
+            fail-fast: false
+            matrix:
+                os: [ubuntu-latest, macos-latest]
+                tool:
+                    # basically all the tools I usually install
+                    [
+                        # { name: "bacon", bin: "bacon" }, # musl only on x86_64 linux for 2.20.0
+                        { name: "bat", bin: "bat" },
+                        { name: "bottom", bin: "btm" },
+                        { name: "du-dust", bin: "dust" },
+                        { name: "eza", bin: "eza" },
+                        { name: "hyperfine", bin: "hyperfine" },
+                        # { name: "procs", bin: "procs" }, # musl only on x86_64 linux for 0.14.6
+                        { name: "ripgrep", bin: "rg" },
+                        { name: "zellij", bin: "zellij" },
+                    ]
+        runs-on: ${{ matrix.os }}
+        steps:
+            - name: asdf_plugin_test
+              uses: asdf-vm/actions/plugin-test@v3.0.2
+              with:
+                  plugin: ${{ matrix.tool.name }}
+                  command: ${{ matrix.tool.bin }} --version

@@ -1,0 +1,4 @@
+{
+	"shellcheck.customArgs": ["--external-sources"],
+	"shellcheck.useWorkspaceRootAsCwd": true
+}
