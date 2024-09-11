@@ -26,11 +26,17 @@ jobs:
                         # { name: "bacon", bin: "bacon" }, # musl only on x86_64 linux for 2.20.0
                         { name: "bat", bin: "bat" },
                         { name: "bottom", bin: "btm" },
+                        { name: "diskonaut", bin: "diskonaut" },
                         { name: "du-dust", bin: "dust" },
                         { name: "eza", bin: "eza" },
+                        { name: "flamegraph", bin: "flamegraph" },
+                        { name: "git-delta", bin: "delta" },
+                        { name: "gitui", bin: "gitui" },
                         { name: "hyperfine", bin: "hyperfine" },
                         # { name: "procs", bin: "procs" }, # musl only on x86_64 linux for 0.14.6
                         { name: "ripgrep", bin: "rg" },
+                        { name: "starship", bin: "starship" },
+                        { name: "tokei", bin: "tokei" },
                         { name: "zellij", bin: "zellij" },
                     ]
         runs-on: ${{ matrix.os }}
