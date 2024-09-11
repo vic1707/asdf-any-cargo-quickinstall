@@ -14,35 +14,84 @@ on:
     workflow_dispatch:
 
 jobs:
-    plugin_test:
-        name: asdf plugin test
+    plugin_macos_test:
+        name: asdf plugin test MacOs
         strategy:
             fail-fast: false
             matrix:
-                os: [ubuntu-latest, macos-latest]
                 tool:
                     # basically all the tools I usually install
+                    # Please keep in sync with linux testing
+                    # until anchors are supported by github actions
                     [
-                        # { name: "bacon", bin: "bacon" }, # musl only on x86_64 linux for 2.20.0
-                        { name: "bat", bin: "bat" },
-                        { name: "bottom", bin: "btm" },
-                        { name: "diskonaut", bin: "diskonaut" },
+                        { name: "bacon" },
+                        { name: "bat" },
+                        { name: "bottom", bin: "btm", gnu_only: true }, # as of 0.10.2
+                        { name: "diskonaut" },
                         { name: "du-dust", bin: "dust" },
-                        { name: "eza", bin: "eza" },
-                        { name: "flamegraph", bin: "flamegraph" },
-                        { name: "git-delta", bin: "delta" },
-                        { name: "gitui", bin: "gitui" },
-                        { name: "hyperfine", bin: "hyperfine" },
-                        # { name: "procs", bin: "procs" }, # musl only on x86_64 linux for 0.14.6
-                        { name: "ripgrep", bin: "rg" },
-                        { name: "starship", bin: "starship" },
-                        { name: "tokei", bin: "tokei" },
-                        { name: "zellij", bin: "zellij" },
+                        { name: "eza" },
+                        { name: "flamegraph" },
+                        { name: "git-delta", bin: "delta", version: "0.18.1" }, # 0.18.2 released for arm only
+                        { name: "gitui" },
+                        { name: "hyperfine" },
+                        { name: "procs", version: "0.14.5" }, # 0.14.6 only released for musl
+                        { name: "ripgrep", bin: "rg", version: "14.1.0" }, # 14.1.1 only released for gnu
+                        { name: "starship" },
+                        { name: "tokei" },
+                        { name: "zellij" },
                     ]
-        runs-on: ${{ matrix.os }}
+        runs-on: macos-latest
         steps:
             - name: asdf_plugin_test
               uses: asdf-vm/actions/plugin-test@v3.0.2
               with:
                   plugin: ${{ matrix.tool.name }}
-                  command: ${{ matrix.tool.bin }} --version
+                  version: ${{ matrix.tool.version || 'latest' }}
+                  command: ${{ matrix.tool.bin || matrix.tool.name }} --version
+
+    plugin_linux_test:
+        name: asdf plugin test Linux
+        strategy:
+            fail-fast: false
+            matrix:
+                container: ["ubuntu:latest", "alpine:latest"]
+                tool:
+                    # basically all the tools I usually install
+                    # Please keep in sync with linux testing
+                    # until anchors are supported by github actions
+                    [
+                        { name: "bacon" },
+                        { name: "bat" },
+                        { name: "bottom", bin: "btm", gnu_only: true }, # as of 0.10.2
+                        { name: "diskonaut" },
+                        { name: "du-dust", bin: "dust" },
+                        { name: "eza" },
+                        { name: "flamegraph" },
+                        { name: "git-delta", bin: "delta", version: "0.18.1" }, # 0.18.2 released for arm only
+                        { name: "gitui" },
+                        { name: "hyperfine" },
+                        { name: "procs", version: "0.14.5" }, # 0.14.6 only released for musl
+                        { name: "ripgrep", bin: "rg", version: "14.1.0" }, # 14.1.1 only released for gnu
+                        { name: "starship" },
+                        { name: "tokei" },
+                        { name: "zellij" },
+                    ]
+        runs-on: ubuntu-latest
+        container:
+            image: ${{ matrix.container }}
+        steps:
+            - name: install deps - Alpine
+              if: ${{ matrix.container == 'alpine:latest' }}
+              run: apk add --no-cache git bash coreutils
+            - name: install deps - Ubuntu
+              if: ${{ matrix.container == 'ubuntu:latest' }}
+              run: |
+                  apt update
+                  apt install -y git wget
+            - name: asdf_plugin_test
+              if: ${{ matrix.tool.musl_only != true && matrix.container == 'ubuntu:latest' || matrix.tool.gnu_only != true && matrix.container == 'alpine:latest' }}
+              uses: asdf-vm/actions/plugin-test@v3.0.2
+              with:
+                  plugin: ${{ matrix.tool.name }}
+                  version: ${{ matrix.tool.version || 'latest' }}
+                  command: ${{ matrix.tool.bin || matrix.tool.name }} --version
