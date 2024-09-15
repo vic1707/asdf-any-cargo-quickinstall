@@ -6,6 +6,7 @@ on:
             - bin/**
             - lib/**
     push:
+        branches: [main]
         paths:
             - bin/**
             - lib/**

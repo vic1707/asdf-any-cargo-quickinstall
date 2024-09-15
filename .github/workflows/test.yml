@@ -7,6 +7,7 @@ on:
             - lib/**
             - .github/workflows/test.yml
     push:
+        branches: [main]
         paths:
             - bin/**
             - lib/**
