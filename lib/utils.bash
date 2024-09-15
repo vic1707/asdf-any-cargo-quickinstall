@@ -7,7 +7,7 @@ TOOL_NAME="${0%/*/*}"
 TOOL_NAME="${TOOL_NAME##*/}"
 
 say() {
-	printf "[asdf-any-cargo-quickinstall](%s): %s\n" "$TOOL_NAME" "$*"
+	echo "[asdf-any-cargo-quickinstall](%s): %s\n" "$TOOL_NAME" "$*"
 }
 
 fail() {
