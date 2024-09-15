@@ -26,16 +26,16 @@ jobs:
                     [
                         { name: "bacon" },
                         { name: "bat" },
-                        { name: "bottom", bin: "btm", gnu_only: true }, # as of 0.10.2
+                        { name: "bottom", bin: "btm" },
                         { name: "diskonaut" },
                         { name: "du-dust", bin: "dust" },
                         { name: "eza" },
                         { name: "flamegraph" },
-                        { name: "git-delta", bin: "delta", version: "0.18.1" }, # 0.18.2 released for arm only
+                        { name: "git-delta", bin: "delta" },
                         { name: "gitui" },
                         { name: "hyperfine" },
-                        { name: "procs", version: "0.14.5" }, # 0.14.6 only released for musl
-                        { name: "ripgrep", bin: "rg", version: "14.1.0" }, # 14.1.1 only released for gnu
+                        { name: "procs" },
+                        { name: "ripgrep", bin: "rg" },
                         { name: "starship" },
                         { name: "tokei" },
                         { name: "zellij" },
@@ -62,16 +62,16 @@ jobs:
                     [
                         { name: "bacon" },
                         { name: "bat" },
-                        { name: "bottom", bin: "btm", gnu_only: true }, # as of 0.10.2
+                        { name: "bottom", bin: "btm" },
                         { name: "diskonaut" },
                         { name: "du-dust", bin: "dust" },
                         { name: "eza" },
                         { name: "flamegraph" },
-                        { name: "git-delta", bin: "delta", version: "0.18.1" }, # 0.18.2 released for arm only
+                        { name: "git-delta", bin: "delta" },
                         { name: "gitui" },
                         { name: "hyperfine" },
-                        { name: "procs", version: "0.14.5" }, # 0.14.6 only released for musl
-                        { name: "ripgrep", bin: "rg", version: "14.1.0" }, # 14.1.1 only released for gnu
+                        { name: "procs" },
+                        { name: "ripgrep", bin: "rg" },
                         { name: "starship" },
                         { name: "tokei" },
                         { name: "zellij" },
