@@ -7,7 +7,7 @@ TOOL_NAME="${0%/*/*}"
 TOOL_NAME="${TOOL_NAME##*/}"
 
 say() {
-	echo "[asdf-any-cargo-quickinstall]($TOOL_NAME): $*"
+	printf "[asdf-any-cargo-quickinstall](%s): %s\n" "$TOOL_NAME" "$*"
 }
 
 fail() {
@@ -83,27 +83,28 @@ get_target_triples() {
 
 			# Detect libc libraries for musl and glibc
 			musl_lib="/lib/ld-musl-$arch.so.1"
-			glibc_lib="/lib/ld-linux-$arch.so.1"
-
-			# Adjust glibc path for specific architectures
+			# glibc has special paths for specific architectures
+			glibc_lib=""
 			case "$arch" in
 				x86_64) glibc_lib="/lib64/ld-linux-x86-64.so.2" ;;
 				aarch64 | arm64) glibc_lib="/lib/ld-linux-aarch64.so.1" ;;
 				armv7l | armv7) glibc_lib="/lib/ld-linux-armhf.so.3" ;;
 			esac
 
-			musl_exists=$([ -f "$musl_lib" ] && echo 1 || echo 0)
-			glibc_exists=$([ -f "$glibc_lib" ] && echo 1 || echo 0)
+			[ -f "$musl_lib" ]
+			musl_exists=$?
+			[ -f "$glibc_lib" ]
+			glibc_exists=$?
 
 			case "$musl_exists:$glibc_exists" in
-				1:1) targets=("$base_triple-musl$libc_sufix" "$base_triple-gnu$libc_sufix") ;;
-				1:0) targets=("$base_triple-musl$libc_sufix") ;;
-				0:1) targets=("$base_triple-gnu$libc_sufix") ;;
-				0:0) fail "Neither musl nor glibc detected." ;;
+				0:0) targets=("$base_triple-musl$libc_sufix" "$base_triple-gnu$libc_sufix") ;;
+				0:1) targets=("$base_triple-musl$libc_sufix") ;;
+				1:0) targets=("$base_triple-gnu$libc_sufix") ;;
+				1:1) fail "Neither musl nor glibc detected." ;;
 			esac
 			;;
 		*) fail "Incompatible platform." ;;
 	esac
 
-	echo "${targets[@]}"
+	printf '%s ' "${targets[@]}"
 }
