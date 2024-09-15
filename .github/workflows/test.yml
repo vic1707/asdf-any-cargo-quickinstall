@@ -14,6 +14,13 @@ on:
     workflow_dispatch:
 
 jobs:
+    banned-command:
+        name: Check for banned commands
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4.1.7
+            - run: ./tests/banned-commands.sh
+
     plugin_macos_test:
         name: asdf plugin test MacOs
         strategy:

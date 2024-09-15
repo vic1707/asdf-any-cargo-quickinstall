@@ -58,7 +58,7 @@ Consequently, this plugin is unable to install [bacon](https://github.com/Canop/
 # Possible improvements
 
 -   [ ] -   Try to make the scripts POSIX `sh` compliant because.
--   [ ] -   Check all scripts against [asdf banned commands](https://github.com/asdf-vm/asdf/blob/master/test/banned_commands.bats).
+-   [x] -   Check all scripts against [asdf banned commands](https://github.com/asdf-vm/asdf/blob/master/test/banned_commands.bats).
 
 # Contributing
 
