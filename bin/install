@@ -28,6 +28,7 @@ for triple in "${TARGET_TRIPLEs[@]}"; do
 		continue
 	fi
 	DL_LINK=$triple_url
+	break
 done
 
 [ -z "$DL_LINK" ] && fail "Couldn't find a compatible version on 'https://github.com/cargo-bins/cargo-quickinstall/releases/$TOOL_NAME_WITH_VERSION'."
